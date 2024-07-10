@@ -5,37 +5,161 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CoinViewUI"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:usercontrol="clr-namespace:CoinViewUI.Usercontrol"
         mc:Ignorable="d"
         WindowState="Maximized"
-        Title="MainWindow" Height="768" Width="1366" Background="White" >
+        Title="MainWindow" Height="768" Width="1366" Background="White">
     <Window.Resources>
+        <Style TargetType="DataGridRow">
+            <Setter Property="Margin" Value="0 5 0 5"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+    
+        <Style TargetType="DataGridCell">
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        
+        <Style x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Border x:Name="Border" Height="30" Background="{TemplateBinding Background}"
+                                    BorderBrush="Black" BorderThickness="1" CornerRadius="10" />
+                            <ContentPresenter Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left"
+                                              Margin="4,4,4,4" />
+                            <Path Grid.Column="0" Margin="0 0 10 0" VerticalAlignment="Center"
+                                  HorizontalAlignment="Right" Fill="Black" Data="M 0 0 L 4 4 L 8 0 Z" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="LightGray" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <Style x:Key="CustomComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton
+                                Name="ToggleButton"
+                                Style="{StaticResource ComboBoxToggleButton}"
+
+                                Focusable="false"
+                                IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                ClickMode="Press" Background="Transparent" />
+
+                            <ContentPresenter
+                                Name="ContentSite"
+                                IsHitTestVisible="False"
+                                Content="{TemplateBinding SelectionBoxItem}"
+                                ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                Margin="10,3,23,3"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left" />
+
+                            <Popup
+                                Name="Popup"
+                                Placement="Bottom"
+                                IsOpen="{TemplateBinding IsDropDownOpen}"
+                                AllowsTransparency="True"
+                                Focusable="False"
+                                PopupAnimation="Slide">
+                                <Grid
+                                    Name="DropDown"
+                                    SnapsToDevicePixels="True"
+                                    MinWidth="{TemplateBinding ActualWidth}"
+                                    MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border
+                                        x:Name="DropDownBorder"
+
+                                        BorderThickness="1" />
+                                    <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True"
+                                                    KeyboardNavigation.DirectionalNavigation="Contained" />
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasItems" Value="false">
+                                <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95" />
+                            </Trigger>
+
+                            <Trigger Property="IsGrouping" Value="true">
+                                <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
+                            </Trigger>
+                            <Trigger SourceName="Popup" Property="AllowsTransparency" Value="true">
+                                <Setter TargetName="DropDownBorder" Property="CornerRadius" Value="10" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+
         <Style x:Key="RoundedButtonStyle" TargetType="Button">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" 
-                                BorderBrush="{TemplateBinding BorderBrush}" 
-                                Width="50" Height="50"
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                Width="Auto" Height="Auto"
                                 CornerRadius="10">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="Black"/>
-            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Black" />
+            <Setter Property="Padding" Value="10" />
+        </Style>
+        <Style x:Key="RoundedButtonStyle2" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                Width="45" Height="45"
+                                CornerRadius="50">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Background" Value="#f2f5fa" />
+            <Setter Property="BorderBrush" Value="Black" />
+            <Setter Property="Padding" Value="10" />
         </Style>
     </Window.Resources>
 
-    <Border Background="Black"  CornerRadius="25"  Padding="10">
+    <Border Background="Black" CornerRadius="25" Padding="10">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-              <Grid ShowGridLines="True">
+            <Grid ShowGridLines="True">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="100" />
                     <RowDefinition Height="*" />
@@ -43,74 +167,281 @@
                 </Grid.RowDefinitions>
 
                 <!-- Row 1: Border with Icon -->
-                <Border Grid.Row="0" Background="#f6f0d8" BorderThickness="2" CornerRadius="10" Width="50" Height="50" Margin="0 50  0 0" Padding="10">
+                <Border Grid.Row="0" Background="#f6f0d8" BorderThickness="2" CornerRadius="10" Width="50" Height="50"
+                        Margin="0 50  0 0" Padding="10">
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <iconPacks:PackIconMaterial Kind="Butterfly"  Height="25" Width="25" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        <iconPacks:PackIconMaterial Kind="Butterfly" Height="25" Width="25" VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center" />
                     </StackPanel>
                 </Border>
 
                 <!-- Row 2: Five Buttons with Icons -->
-                <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center"  >
-                    <Button Style="{StaticResource RoundedButtonStyle}" Margin="5" Padding="10">
+                <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Button Style="{StaticResource RoundedButtonStyle}" Margin="5" Height="50" Width="50" Padding="10">
                         <StackPanel Orientation="Horizontal">
-                            <iconPacks:PackIconMaterial Foreground="White" Height="25" Width="25" Kind="ViewDashboardOutline" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                            <iconPacks:PackIconMaterial Foreground="White" Height="25" Width="25"
+                                                        Kind="ViewDashboardOutline" VerticalAlignment="Center"
+                                                        HorizontalAlignment="Center" />
                         </StackPanel>
                     </Button>
-                    <Button Style="{StaticResource RoundedButtonStyle}" Margin="5" Padding="10">
+                    <Button Style="{StaticResource RoundedButtonStyle}" Height="50" Width="50" Margin="5" Padding="10">
                         <StackPanel Orientation="Horizontal">
-                            <iconPacks:PackIconMaterial  Foreground="White" Height="25" Width="25" Kind="WalletOutline" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                            <iconPacks:PackIconMaterial Foreground="White" Height="25" Width="25" Kind="WalletOutline"
+                                                        VerticalAlignment="Center" HorizontalAlignment="Center" />
                         </StackPanel>
                     </Button>
-                    <Button Style="{StaticResource RoundedButtonStyle}" Margin="5" Padding="10">
+                    <Button Style="{StaticResource RoundedButtonStyle}" Margin="5" Height="50" Width="50" Padding="10">
                         <StackPanel Orientation="Horizontal">
-                            <iconPacks:PackIconMaterial  Foreground="White" Height="25" Width="25" Kind="StadiumOutline" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                            <iconPacks:PackIconMaterial Foreground="White" Height="25" Width="25" Kind="StadiumOutline"
+                                                        VerticalAlignment="Center" HorizontalAlignment="Center" />
                         </StackPanel>
                     </Button>
-                    <Button Style="{StaticResource RoundedButtonStyle}" Margin="5" Padding="10">
+                    <Button Style="{StaticResource RoundedButtonStyle}" Height="50" Width="50" Margin="5" Padding="10">
                         <StackPanel Orientation="Horizontal">
-                            <iconPacks:PackIconMaterial  Foreground="White" Height="25" Width="25" Kind="ApplicationOutline" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                            <iconPacks:PackIconMaterial Foreground="White" Height="25" Width="25"
+                                                        Kind="ApplicationOutline" VerticalAlignment="Center"
+                                                        HorizontalAlignment="Center" />
                         </StackPanel>
                     </Button>
-                    <Button Style="{StaticResource RoundedButtonStyle}" Margin="5" Padding="10">
+                    <Button Style="{StaticResource RoundedButtonStyle}" Margin="5" Height="50" Width="50" Padding="10">
                         <StackPanel Orientation="Horizontal">
-                            <iconPacks:PackIconMaterial  Foreground="White" Height="25" Width="25" Kind="FaceMan" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                            <iconPacks:PackIconMaterial Foreground="White" Height="25" Width="25" Kind="FaceMan"
+                                                        VerticalAlignment="Center" HorizontalAlignment="Center" />
                         </StackPanel>
                     </Button>
                 </StackPanel>
 
                 <!-- Row 3: Button with Icon -->
-                <Button Grid.Row="2" Style="{StaticResource RoundedButtonStyle}" Margin="5" Padding="10">
+                <Button Grid.Row="2" Style="{StaticResource RoundedButtonStyle}" Height="50" Width="50" Margin="5"
+                        Padding="10">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <iconPacks:PackIconMaterial Kind="LogoutVariant"  Foreground="White" Height="25" Width="25" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                        
+                        <iconPacks:PackIconMaterial Kind="LogoutVariant" Foreground="White" Height="25" Width="25"
+                                                    VerticalAlignment="Center" HorizontalAlignment="Center" />
+
                     </StackPanel>
                 </Button>
             </Grid>
 
             <!-- Content for the second column -->
-            <Border Margin="15" Grid.Column="1" Background="White" CornerRadius="25" >
+            <Border Margin="15" Grid.Column="1" Background="White" CornerRadius="25">
                 <Grid ShowGridLines="True">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="85" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="85" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
 
                     <StackPanel Grid.Row="0" Orientation="Horizontal">
                         <DockPanel LastChildFill="True" Width="1200">
-                            <TextBlock DockPanel.Dock="Left" Text="Overview" FontSize="30" FontWeight="Bold" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="25 25 0 5 "/>
-                            <Button DockPanel.Dock="Right" Content="asd"  HorizontalAlignment="Right" Margin="5"/>
-                            <Button DockPanel.Dock="Right" Content="asd"  HorizontalAlignment="Right" Margin="5"/>
-                            <Button DockPanel.Dock="Right" Content="asd"  HorizontalAlignment="Right" Margin="5"/>
+                            <TextBlock DockPanel.Dock="Left" Text="Overview" FontSize="30" FontWeight="Bold"
+                                       VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="25 25 0 5 " />
+                            <Button VerticalAlignment="Bottom" Style="{StaticResource RoundedButtonStyle}"
+                                    DockPanel.Dock="Right" Height="45" Background="#f2f5fa" Width="110" Margin="5">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Border CornerRadius="25" VerticalAlignment="Center" Height="40" Width="40"
+                                            Margin="-5 0 0 5">
+                                        <Border.Background>
+                                            <ImageBrush
+                                                ImageSource="C:\Users\Alienware\RiderProjects\CoinViewUI\Img\foto.png">
+                                            </ImageBrush>
+                                        </Border.Background>
+                                    </Border>
+                                    <TextBlock FontWeight="DemiBold" Margin="5 0 5 0" VerticalAlignment="Center">Zoia M.</TextBlock>
+                                    <iconPacks:PackIconMaterial Kind="ChevronDown" Foreground="Black" Height="10"
+                                                                Width="10"
+                                                                VerticalAlignment="Center" HorizontalAlignment="Center" />
+
+                                </StackPanel>
+                            </Button>
+                            <Button VerticalAlignment="Bottom" Style="{StaticResource RoundedButtonStyle2}"
+                                    DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="5">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <iconPacks:PackIconMaterial Kind="LogoutVariant" Foreground="Black" Height="20"
+                                                                Width="20"
+                                                                VerticalAlignment="Center" HorizontalAlignment="Center" />
+
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource RoundedButtonStyle2}" DockPanel.Dock="Right"
+                                    VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <iconPacks:PackIconMaterial Kind="SearchWeb" Foreground="Black" Height="20"
+                                                                Width="20"
+                                                                VerticalAlignment="Center" HorizontalAlignment="Center" />
+
+                                </StackPanel>
+                            </Button>
                         </DockPanel>
                     </StackPanel>
-                            <!-- Row 2 Content -->
-                            <TextBlock Grid.Row="1" Text="Row 2" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
-                            <!-- Row 3 Content -->
-                            <TextBlock Grid.Row="2" Text="Row 3" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <Grid Grid.Row="1" ShowGridLines="True">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Orientation="Vertical">
+                            <Label DockPanel.Dock="Left" Content="Portafolio" FontWeight="Bold" FontSize="25"
+                                   HorizontalAlignment="Left" Margin="25 5 0 5" />
+
+                            <Border Grid.Column="0" Background="#e5f2fe" CornerRadius="25" Height="250"
+                                    VerticalAlignment="Top" Margin="25 5 5 0 " Padding="15">
+                                <Grid ShowGridLines="True">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="100" />
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Inner Grid Rows Content -->
+                                    <DockPanel Grid.Row="0" LastChildFill="True">
+                                        <Label DockPanel.Dock="Left" Content="$17 634.31" FontWeight="Black"
+                                               FontSize="25" HorizontalAlignment="Left" Margin="5" />
+                                        <iconPacks:PackIconMaterial DockPanel.Dock="Right" Kind="DotsVertical"
+                                                                    HorizontalAlignment="Right"
+                                                                    VerticalAlignment="Center" Margin="5" />
+                                    </DockPanel>
+                                    <TextBlock Grid.Row="1" Text="Portafolio Balance" HorizontalAlignment="Left"
+                                               VerticalAlignment="Center" Margin="12 0 0 0" />
+                                    <TextBlock Grid.Row="2" Text="Inner Row 3" HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" />
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Vertical">
+                            <DockPanel Grid.Row="0" LastChildFill="True" Margin="25 5 25 5">
+                                <Label DockPanel.Dock="Left" Content="Your Assets" FontWeight="Bold" FontSize="25"
+                                       HorizontalAlignment="Left" Margin="5" />
+                                <iconPacks:PackIconMaterial DockPanel.Dock="Right" Kind="Filter"
+                                                            HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                            Margin="5" />
+                            </DockPanel>
+                            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <usercontrol:Card Height="250"></usercontrol:Card>
+                                <usercontrol:Card Height="250" Margin="25 0 25 0"></usercontrol:Card>
+                                <usercontrol:Card Height="250"></usercontrol:Card>
+                            </WrapPanel>
+                        </StackPanel>
+                    </Grid>
+                    <!-- Row 3 Content -->
+                    <Grid Grid.Row="2" ShowGridLines="True">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="810" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Column 0 Content -->
+                        <Grid Grid.Column="0" ShowGridLines="True">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <DockPanel Grid.Row="0" Margin="25 5 5 5">
+                                <Label DockPanel.Dock="Left" Content="Market is down 0.80%" FontWeight="Bold"
+                                       FontSize="25" HorizontalAlignment="Left" Margin="5" />
+                                <ComboBox DockPanel.Dock="Right" HorizontalAlignment="Right"
+                                          Style="{StaticResource CustomComboBoxStyle}" Width="100"
+                                          VerticalAlignment="Center" SelectedIndex="0">
+                                    <ComboBoxItem>Top Gainers</ComboBoxItem>
+                                </ComboBox>
+                                <ComboBox HorizontalAlignment="Right" Margin="0 0 15 0" DockPanel.Dock="Right"
+                                          Style="{StaticResource CustomComboBoxStyle}" Width="55"
+                                          VerticalAlignment="Center" SelectedIndex="0">
+                                    <ComboBoxItem>24h</ComboBoxItem>
+                                </ComboBox>
+                            </DockPanel>
+                            <DataGrid Grid.Row="1" Margin="20 5 5 5" AutoGenerateColumns="False"
+                                       Background="Transparent" BorderBrush="Transparent"
+                                      ItemsSource="{Binding Cryptocurrencies}"
+                                       RowStyle="{StaticResource {x:Type DataGridRow}}"
+                                       CellStyle="{StaticResource {x:Type DataGridCell}}">
+                                <DataGrid.ColumnHeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="Background" Value="Transparent" />
+                                        <Setter Property="BorderBrush" Value="Transparent" />
+                                        <Setter Property="Foreground" Value="DimGray"></Setter>
+                                        <Setter Property="FontSize" Value="15"></Setter>
+                                    </Style>
+                                </DataGrid.ColumnHeaderStyle>
+                                
+                               
+
+                                <DataGrid.Columns >
+                                    <DataGridTemplateColumn Header="Name" IsReadOnly="True" Width="1*" >
+                                        <DataGridTemplateColumn.CellTemplate >
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal"  >
+                                                    <Border Width="50" Height="50" CornerRadius="10" Margin="0 0 10 0"
+                                                            Background="Black">
+                                                        <iconPacks:PackIconMaterial Kind="Bitcoin"
+                                                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                            Height="25" Width="25" Foreground="White" Margin="5" />
+                                                    </Border>
+                                                    <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding Name}" FontWeight="Black" FontSize="18" VerticalAlignment="Center" />
+                                                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontSize="15" />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    
+                                    <DataGridTemplateColumn Header="Price" IsReadOnly="True" Width="1*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Price}" FontWeight="DemiBold" FontSize="15" Foreground="Black"
+                                                               VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+
+                                    <DataGridTemplateColumn Header="Change" IsReadOnly="True" Width="1*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Change}" FontWeight="DemiBold" FontSize="15" Foreground="Red"
+                                                               VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTemplateColumn Header="Market Cap" IsReadOnly="True" Width="1*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding MarketCap}" Foreground="Black"  FontSize="15"
+                                                               FontWeight="Black" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTemplateColumn Header="Watch"  IsReadOnly="True" CellStyle="{StaticResource {x:Type DataGridCell}}" Width="1*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                    <iconPacks:PackIconMaterial Kind="Star"
+                                                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                        Height="25" Width="25" Margin="5" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </Grid>
-                 
+                        <!-- Column 1 Content -->
+                        <TextBlock Grid.Column="1" Text="Column 2" HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+                    </Grid>
+                </Grid>
+
             </Border>
         </Grid>
     </Border>
