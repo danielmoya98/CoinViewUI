@@ -4,9 +4,114 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CoinViewUI"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        WindowState="Maximized"
+        Title="MainWindow" Height="768" Width="1366" Background="White" >
+    <Window.Resources>
+        <Style x:Key="RoundedButtonStyle" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                Width="50" Height="50"
+                                CornerRadius="10">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="Padding" Value="10"/>
+        </Style>
+    </Window.Resources>
 
-    </Grid>
+    <Border Background="Black"  CornerRadius="25"  Padding="10">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+              <Grid ShowGridLines="True">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="100" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="150" />
+                </Grid.RowDefinitions>
+
+                <!-- Row 1: Border with Icon -->
+                <Border Grid.Row="0" Background="#f6f0d8" BorderThickness="2" CornerRadius="10" Width="50" Height="50" Margin="0 50  0 0" Padding="10">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <iconPacks:PackIconMaterial Kind="Butterfly"  Height="25" Width="25" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Row 2: Five Buttons with Icons -->
+                <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center"  >
+                    <Button Style="{StaticResource RoundedButtonStyle}" Margin="5" Padding="10">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Foreground="White" Height="25" Width="25" Kind="ViewDashboardOutline" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource RoundedButtonStyle}" Margin="5" Padding="10">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial  Foreground="White" Height="25" Width="25" Kind="WalletOutline" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource RoundedButtonStyle}" Margin="5" Padding="10">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial  Foreground="White" Height="25" Width="25" Kind="StadiumOutline" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource RoundedButtonStyle}" Margin="5" Padding="10">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial  Foreground="White" Height="25" Width="25" Kind="ApplicationOutline" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource RoundedButtonStyle}" Margin="5" Padding="10">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial  Foreground="White" Height="25" Width="25" Kind="FaceMan" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <!-- Row 3: Button with Icon -->
+                <Button Grid.Row="2" Style="{StaticResource RoundedButtonStyle}" Margin="5" Padding="10">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <iconPacks:PackIconMaterial Kind="LogoutVariant"  Foreground="White" Height="25" Width="25" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <!-- Content for the second column -->
+            <Border Margin="15" Grid.Column="1" Background="White" CornerRadius="25" >
+                <Grid ShowGridLines="True">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="85" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Orientation="Horizontal">
+                        <DockPanel LastChildFill="True" Width="1200">
+                            <TextBlock DockPanel.Dock="Left" Text="Overview" FontSize="30" FontWeight="Bold" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="25 25 0 5 "/>
+                            <Button DockPanel.Dock="Right" Content="asd"  HorizontalAlignment="Right" Margin="5"/>
+                            <Button DockPanel.Dock="Right" Content="asd"  HorizontalAlignment="Right" Margin="5"/>
+                            <Button DockPanel.Dock="Right" Content="asd"  HorizontalAlignment="Right" Margin="5"/>
+                        </DockPanel>
+                    </StackPanel>
+                            <!-- Row 2 Content -->
+                            <TextBlock Grid.Row="1" Text="Row 2" HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+                            <!-- Row 3 Content -->
+                            <TextBlock Grid.Row="2" Text="Row 3" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Grid>
+                 
+            </Border>
+        </Grid>
+    </Border>
 </Window>
